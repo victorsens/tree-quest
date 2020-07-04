@@ -10,9 +10,9 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.swisscom</groupId>
-  <artifactId>tree-guest</artifactId>
+  <artifactId>tree-quest</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>tree-guest</name>
+  <name>tree-quest</name>
   <description>Demo project for Spring Boot</description>
 
   <properties>

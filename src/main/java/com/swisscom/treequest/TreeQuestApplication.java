@@ -1,13 +1,13 @@
-package com.swisscom.treeguest;
+package com.swisscom.treequest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TreeGuestApplication {
+public class TreeQuestApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(TreeGuestApplication.class, args);
+    SpringApplication.run(TreeQuestApplication.class, args);
   }
 
 }
