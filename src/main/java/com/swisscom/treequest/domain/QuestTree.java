@@ -4,6 +4,7 @@ import static com.swisscom.treequest.domain.BrickId.IN_BOTH_TREES;
 import static com.swisscom.treequest.domain.BrickId.ONLY_IN_NEW;
 import static com.swisscom.treequest.domain.BrickId.ROOT;
 import static com.swisscom.treequest.domain.QuestTreeOperations.CREATE;
+import static com.swisscom.treequest.domain.QuestTreeOperations.DELETE;
 import static com.swisscom.treequest.domain.QuestTreeOperations.NO_ACTION;
 import static com.swisscom.treequest.domain.QuestTreeOperations.UPDATE;
 import static java.util.Collections.emptyList;
@@ -48,7 +49,17 @@ public class QuestTree implements Comparable<QuestTree> {
       } else {
         updateNode(originalChild, newChild);
       }
+
     });
+
+    this.children.forEach(originalChild -> {
+      final QuestTree newChild = newTree.scanById(originalChild.getId());
+      if(newChild == null) {
+        originalChild.setOperation(DELETE);
+        originalChild.getAttributes().forEach(stringStringMap -> stringStringMap.put("operation", DELETE.toString()));
+      }
+    });
+
     return this;
   }
 

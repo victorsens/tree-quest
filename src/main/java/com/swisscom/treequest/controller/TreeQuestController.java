@@ -24,7 +24,7 @@ public class TreeQuestController {
   protected static final String VERSION_PATH = "/v1/";
   private static final String RETRIEVE_URL =  "retrieve-tree";
   private static final String ADD_TREE_URL =  "add-tree";
-  private static final String CLEAN_TREE_URL =  "delete-tree";
+  private static final String CLEAN_TREE_URL =  "clean-tree";
 
   private final TreeQuestService treeGuestService;
 
