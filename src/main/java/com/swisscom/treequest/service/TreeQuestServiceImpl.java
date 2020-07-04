@@ -1,8 +1,6 @@
 package com.swisscom.treequest.service;
 
 
-import static com.swisscom.treequest.domain.QuestTreeType.ROOT;
-
 import com.swisscom.treequest.domain.QuestTree;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,23 +9,21 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TreeQuestServiceImpl implements TreeQuestService {
 
-  private QuestTree questTree; //TODO use storage?
-
-  public TreeQuestServiceImpl() {
-    questTree = QuestTree.builder()
-        .id("rootId")
-        .type(ROOT)
-        .build();
-  }
+  private QuestTree rootTree; //TODO use storage?
 
   @Override
-  public void addQuestTree(QuestTree questTree) {
+  public void addQuestTree(final QuestTree questTree) {
     log.info("start to add merge the trees {}", questTree);
-    this.questTree = questTree;
+    rootTree = rootTree == null ? questTree : rootTree.mergeTree(questTree);
   }
 
   @Override
   public QuestTree retrieveQuestTree() {
-    return questTree;
+    return rootTree;
+  }
+
+  @Override
+  public void clenaTree() {
+    rootTree = null;
   }
 }

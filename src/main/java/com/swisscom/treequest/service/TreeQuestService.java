@@ -9,4 +9,5 @@ public interface TreeQuestService {
 
   QuestTree retrieveQuestTree();
 
+  void clenaTree();
 }

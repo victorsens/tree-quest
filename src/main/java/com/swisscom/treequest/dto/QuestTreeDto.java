@@ -21,6 +21,8 @@ public class QuestTreeDto {
 
   private String id;
   private String type;
+  private String brickId;
+  private String operation;
 
   @Builder.Default
   private List<QuestTreeDto> children = emptyList();
@@ -33,7 +35,9 @@ public class QuestTreeDto {
 
   public QuestTreeDto(QuestTree questTree) {
     this.id = questTree.getId();
-    this.type = questTree.getType().toString();
+    this.type =  questTree.getType().map(Enum::toString).orElse("");
+    this.brickId = questTree.getBrickId().map(Enum::toString).orElse("");
+    this.operation = questTree.getOperation().map(Enum::toString).orElse("");
     this.attributes = questTree.getAttributes();
     this.relations = questTree.getRelations().stream().map(QuestTree::getId).collect(toList());
     this.children = questTree.getChildren().stream().map(QuestTreeDto::new).collect(toList());
@@ -47,7 +51,7 @@ public class QuestTreeDto {
         .children(children.stream().map(QuestTreeDto::toDomain).collect(toList()))
         .build();
 
-    if(questTree.getType() == ROOT) {
+    if(questTree.getType().orElse(null) == ROOT) {
       addRelations(questTree, this);
     }
 
