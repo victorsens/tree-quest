@@ -1,16 +1,10 @@
 package com.swisscom.treequest.domain;
 
-import static com.swisscom.treequest.domain.BrickId.IN_BOTH_TREES;
-import static com.swisscom.treequest.domain.BrickId.ONLY_IN_NEW;
-import static com.swisscom.treequest.domain.BrickId.ROOT;
-import static com.swisscom.treequest.domain.QuestTreeOperations.CREATE;
-import static com.swisscom.treequest.domain.QuestTreeOperations.DELETE;
-import static com.swisscom.treequest.domain.QuestTreeOperations.NO_ACTION;
-import static com.swisscom.treequest.domain.QuestTreeOperations.UPDATE;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.sort;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +13,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class QuestTree implements Comparable<QuestTree> {
+public class QuestTree implements Comparable<QuestTree>, Cloneable {
 
   @Builder.Default
   private String id = "";
@@ -38,45 +32,6 @@ public class QuestTree implements Comparable<QuestTree> {
 
   @Builder.Default
   private List<QuestTree> relations = emptyList();
-
-  public QuestTree mergeTree(QuestTree newTree) {
-    this.operation = NO_ACTION; //TODO think to clone, instead to update the same object
-    this.brickId = ROOT;
-    newTree.children.forEach(newChild -> {
-      final QuestTree originalChild = this.scanById(newChild.getId());
-      if(originalChild == null) {
-       addToTree(newChild);
-      } else {
-        updateNode(originalChild, newChild);
-      }
-
-    });
-
-    this.children.forEach(originalChild -> {
-      final QuestTree newChild = newTree.scanById(originalChild.getId());
-      if(newChild == null) {
-        originalChild.setOperation(DELETE);
-        originalChild.getAttributes().forEach(stringStringMap -> stringStringMap.put("operation", DELETE.toString()));
-      }
-    });
-
-    return this;
-  }
-
-  private void addToTree(QuestTree newChild) {
-    newChild.brickId = ONLY_IN_NEW;
-    newChild.operation = CREATE;
-    this.children.add(newChild);
-    sort(this.children);
-  }
-
-  private void updateNode(QuestTree original, QuestTree newOne) {
-    original.setType(newOne.type);
-    original.operation = UPDATE;
-    original.relations = newOne.getRelations();
-    original.brickId = IN_BOTH_TREES;
-    original.attributes = newOne.getAttributes(); //TODO merge it.. not just change.
-  }
 
   public QuestTree scanById(String id) {
     if (this.id.equals(id)) {
@@ -101,6 +56,19 @@ public class QuestTree implements Comparable<QuestTree> {
 
   public Optional<QuestTreeOperations> getOperation() {
     return ofNullable(operation);
+  }
+
+  @Override
+  public QuestTree clone()  { //TODO
+    return QuestTree.builder()
+        .id(id)
+        .brickId(brickId)
+        .type(type)
+        .operation(operation)
+        .children(children.stream().map(QuestTree::clone).collect(toList()))
+        .relations(relations.stream().map(QuestTree::clone).collect(toList()))
+        .attributes(attributes.stream().map(stringStringMap -> new HashMap<String, String>(stringStringMap)).collect(toList())) //TODO
+        .build();
   }
 
   @Override

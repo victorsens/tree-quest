@@ -1,5 +1,7 @@
 package com.swisscom.treequest.controller;
 
+import static com.swisscom.treequest.domain.BrickId.ONLY_IN_INITIAL;
+import static com.swisscom.treequest.domain.QuestTreeOperations.CREATE;
 import static com.swisscom.treequest.domain.QuestTreeOperations.DELETE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,6 +29,7 @@ class TreeQuestControllerTest {
 
   @BeforeEach
   void shouldAddTree() {
+    restTemplate.delete("http://localhost:" + port + "/v1/clean-tree");
     QuestTreeDto initialTree = readTreeFromFile("initial_tree.json");
     ResponseEntity<String> resourceAdd = restTemplate.postForEntity("http://localhost:" + port + "/v1/add-tree", initialTree, String.class);
     assertEquals(resourceAdd.getStatusCode(), HttpStatus.CREATED);
@@ -51,14 +54,31 @@ class TreeQuestControllerTest {
 
   @Test
   void shouldSetOperationToDelete() {
-
     ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/retrieve-tree", QuestTreeDto.class);
     assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
     QuestTreeDto orderTree = resourceRetrieve.getBody();
     assert orderTree != null;
     assertEquals(orderTree.getChildren().get(0).getOperation(), DELETE.toString());
     assertEquals(orderTree.getChildren().get(0).getAttributes().get(0).get("operation"), DELETE.toString());
+  }
 
+  @Test
+  void shouldSetOperationToCreate() {
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/retrieve-tree", QuestTreeDto.class);
+    assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
+    QuestTreeDto orderTree = resourceRetrieve.getBody();
+    assert orderTree != null;
+    assertEquals(orderTree.getChildren().get(2).getOperation(), CREATE.toString());
+    assertEquals(orderTree.getChildren().get(2).getAttributes().get(0).get("operation"), CREATE.toString());
+  }
+
+  @Test
+  void shouldSetBrickIdToInitial() {
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/retrieve-tree", QuestTreeDto.class);
+    assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
+    QuestTreeDto orderTree = resourceRetrieve.getBody();
+    assert orderTree != null;
+    assertEquals(orderTree.getChildren().get(0).getBrickId(), ONLY_IN_INITIAL.toString());
   }
 
   @SneakyThrows

@@ -11,10 +11,17 @@ public class TreeQuestServiceImpl implements TreeQuestService {
 
   private QuestTree rootTree; //TODO use storage?
 
+  private final TreeQuestMerger treeQuestMerger;
+
+  public TreeQuestServiceImpl(TreeQuestMerger treeQuestMerger) {
+    this.treeQuestMerger = treeQuestMerger;
+  }
+
+
   @Override
   public void addQuestTree(final QuestTree questTree) {
     log.info("start to add merge the trees {}", questTree);
-    rootTree = rootTree == null ? questTree : rootTree.mergeTree(questTree);
+    rootTree = rootTree == null ? questTree : treeQuestMerger.mergeTree(rootTree, questTree);
   }
 
   @Override
