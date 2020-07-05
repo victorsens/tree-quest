@@ -5,9 +5,11 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import com.swisscom.treequest.domain.QuestTree;
+import com.swisscom.treequest.domain.QuestTreeAttribute;
 import com.swisscom.treequest.domain.QuestTreeType;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +30,7 @@ public class QuestTreeDto {
   private List<QuestTreeDto> children = emptyList();
 
   @Builder.Default
-  private List<Map<String,String>> attributes = emptyList();
+  private List<QuestTreeAttribute> attributes = emptyList();
 
   @Builder.Default
   private List<String> relations = emptyList();
@@ -38,7 +40,7 @@ public class QuestTreeDto {
     this.type =  questTree.getType().map(Enum::toString).orElse("");
     this.brickId = questTree.getBrickId().map(Enum::toString).orElse("");
     this.operation = questTree.getOperation().map(Enum::toString).orElse("");
-    this.attributes = questTree.getAttributes();
+    this.attributes = new ArrayList<>(questTree.getAttributes().values());
     this.relations = questTree.getRelations().stream().map(QuestTree::getId).collect(toList());
     this.children = questTree.getChildren().stream().map(QuestTreeDto::new).collect(toList());
   }
@@ -47,7 +49,7 @@ public class QuestTreeDto {
     final QuestTree questTree = QuestTree.builder()
         .id(id)
         .type(QuestTreeType.valueOf(type))
-        .attributes(attributes)
+        .attributes(attributes.stream().collect(Collectors.toMap(QuestTreeAttribute::getName, att -> att)))
         .children(children.stream().map(QuestTreeDto::toDomain).collect(toList()))
         .build();
 

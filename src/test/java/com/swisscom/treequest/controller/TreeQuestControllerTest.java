@@ -1,8 +1,11 @@
 package com.swisscom.treequest.controller;
 
+import static com.swisscom.treequest.domain.BrickId.IN_BOTH_TREES;
 import static com.swisscom.treequest.domain.BrickId.ONLY_IN_INITIAL;
 import static com.swisscom.treequest.domain.QuestTreeOperations.CREATE;
 import static com.swisscom.treequest.domain.QuestTreeOperations.DELETE;
+import static com.swisscom.treequest.domain.QuestTreeOperations.NO_ACTION;
+import static com.swisscom.treequest.domain.QuestTreeOperations.UPDATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +62,7 @@ class TreeQuestControllerTest {
     QuestTreeDto orderTree = resourceRetrieve.getBody();
     assert orderTree != null;
     assertEquals(orderTree.getChildren().get(0).getOperation(), DELETE.toString());
-    assertEquals(orderTree.getChildren().get(0).getAttributes().get(0).get("operation"), DELETE.toString());
+    assertEquals(orderTree.getChildren().get(0).getAttributes().get(0).getOperation(), DELETE);
   }
 
   @Test
@@ -69,7 +72,29 @@ class TreeQuestControllerTest {
     QuestTreeDto orderTree = resourceRetrieve.getBody();
     assert orderTree != null;
     assertEquals(orderTree.getChildren().get(2).getOperation(), CREATE.toString());
-    assertEquals(orderTree.getChildren().get(2).getAttributes().get(0).get("operation"), CREATE.toString());
+    assertEquals(orderTree.getChildren().get(2).getAttributes().get(0).getOperation(), CREATE);
+  }
+
+  @Test
+  void shouldSetOperationToNoAction() {
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/retrieve-tree", QuestTreeDto.class);
+    assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
+    QuestTreeDto orderTree = resourceRetrieve.getBody();
+    assert orderTree != null;
+    assertEquals(orderTree.getOperation(), NO_ACTION.toString());
+    assertEquals(orderTree.getAttributes().get(0).getOperation(), NO_ACTION);
+  }
+
+  @Test
+  void shouldMergeAttributesInBothLists() {
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/retrieve-tree", QuestTreeDto.class);
+    assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
+    QuestTreeDto orderTree = resourceRetrieve.getBody();
+    assert orderTree != null;
+    assertEquals(orderTree.getChildren().get(1).getBrickId(), IN_BOTH_TREES.toString());
+    assertEquals(orderTree.getChildren().get(1).getAttributes().get(0).getOperation(), UPDATE);
+    assertEquals(orderTree.getChildren().get(1).getAttributes().get(1).getOperation(), DELETE);
+    assertEquals(orderTree.getChildren().get(1).getAttributes().get(2).getOperation(), CREATE);
   }
 
   @Test
