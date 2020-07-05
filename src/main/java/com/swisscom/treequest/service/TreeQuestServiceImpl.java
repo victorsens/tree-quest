@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TreeQuestServiceImpl implements TreeQuestService {
 
-  private QuestTree rootTree; //TODO use storage?
+  private QuestTree initialTree;
+  private QuestTree newTree;
 
   private final TreeQuestMerger treeQuestMerger;
 
@@ -17,20 +18,29 @@ public class TreeQuestServiceImpl implements TreeQuestService {
     this.treeQuestMerger = treeQuestMerger;
   }
 
-
   @Override
-  public void addQuestTree(final QuestTree questTree) {
-    log.info("start to add merge the trees {}", questTree);
-    rootTree = rootTree == null ? questTree : treeQuestMerger.mergeTree(rootTree, questTree);
+  public void addInitialQuestTree(final QuestTree questTree) {
+    log.info("Add initial tree {}", questTree);
+    initialTree = questTree;
   }
 
   @Override
-  public QuestTree retrieveQuestTree() {
-    return rootTree;
+  public void addNewQuestTree(QuestTree questTree) {
+    log.info("Add new tree {}", questTree);
+    newTree = questTree;
   }
 
   @Override
-  public void clenaTree() {
-    rootTree = null;
+  public QuestTree mergeQuestTrees() {
+    log.info("start to merge the trees");
+    return treeQuestMerger.mergeTree(initialTree, newTree);
   }
+
+  @Override
+  public void cleanTrees() {
+    initialTree = null;
+    newTree  = null;
+  }
+
+
 }

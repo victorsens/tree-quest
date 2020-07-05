@@ -60,7 +60,6 @@ public class TreeQuestMerger { //TODO think best package to set it.
       merged.setOperation(UPDATE);
       merged.setRelations(newOne.getRelations());
       merged.setBrickId(IN_BOTH_TREES);
-//      merged.setAttributes(newOne.getAttributes()); //TODO merge it.. not just change.
       mergeAttributes(merged.getAttributes(),newOne.getAttributes());
     }
 

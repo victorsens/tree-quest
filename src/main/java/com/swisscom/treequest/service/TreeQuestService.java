@@ -5,9 +5,11 @@ import com.swisscom.treequest.domain.QuestTree;
 
 public interface TreeQuestService {
 
-  void addQuestTree(QuestTree questTree);
+  void addInitialQuestTree(QuestTree questTree);
 
-  QuestTree retrieveQuestTree();
+  QuestTree mergeQuestTrees();
 
-  void clenaTree();
+  void cleanTrees();
+
+  void addNewQuestTree(QuestTree toDomain);
 }

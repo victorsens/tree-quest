@@ -36,29 +36,19 @@ public class QuestTree implements Comparable<QuestTree>, Cloneable {
   private List<QuestTree> relations = emptyList();
 
   public QuestTree scanById(String id) {
-    if (this.id.equals(id)) {
+    if(this.id.equals(id)) {
       return this;
     } else {
       for (QuestTree child : children) {
-        if (child.id.equals(id)) { //TODO think how to create a full recursive method. (this one is just for the first level of children)
-          return child;
+        QuestTree tree = child.scanById(id);
+        if(tree != null) {
+          return tree;
         }
       }
     }
-    return null;
+  return null;
   }
 
-  public Optional<BrickId> getBrickId() {
-    return ofNullable(brickId);
-  }
-
-  public Optional<QuestTreeType> getType() {
-    return ofNullable(type);
-  }
-
-  public Optional<QuestTreeOperations> getOperation() {
-    return ofNullable(operation);
-  }
 
   @SneakyThrows
   @Override
@@ -78,6 +68,18 @@ public class QuestTree implements Comparable<QuestTree>, Cloneable {
             .operation(att.getOperation())
             .build()).collect(toMap(QuestTreeAttribute::getName, att -> att)))
         .build();
+  }
+
+  public Optional<BrickId> getBrickId() {
+    return ofNullable(brickId);
+  }
+
+  public Optional<QuestTreeType> getType() {
+    return ofNullable(type);
+  }
+
+  public Optional<QuestTreeOperations> getOperation() {
+    return ofNullable(operation);
   }
 
   @Override
