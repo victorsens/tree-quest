@@ -10,6 +10,8 @@ import com.swisscom.treequest.domain.QuestTreeType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,15 +23,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QuestTreeDto {
 
+  @NotBlank(message = "Id is mandatory")
   private String id;
   private String type;
   private String brickId;
   private String operation;
 
   @Builder.Default
+  @Valid
   private List<QuestTreeDto> children = emptyList();
 
   @Builder.Default
+  @Valid
   private List<QuestTreeAttribute> attributes = emptyList();
 
   @Builder.Default

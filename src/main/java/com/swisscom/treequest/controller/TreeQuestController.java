@@ -4,6 +4,7 @@ import com.swisscom.treequest.dto.QuestTreeDto;
 import com.swisscom.treequest.service.TreeQuestService;
 import io.swagger.annotations.Api;
 import java.net.URI;
+import javax.validation.Valid;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = TreeQuestController.VERSION_PATH)
-@Api("Tree guest operations") //TODO To find a best description to this API.
+@Api("Project Assignment TCSP")
 @Slf4j
 public class TreeQuestController {
 
@@ -36,7 +37,7 @@ public class TreeQuestController {
 
   @SneakyThrows
   @PostMapping(ADD_INITIAL_TREE_URL)
-  public ResponseEntity<QuestTreeDto> addInitialTree(@RequestBody QuestTreeDto questTree) {
+  public ResponseEntity<QuestTreeDto> addInitialTree(@Valid @RequestBody QuestTreeDto questTree) {
     log.info("add-tree endpoint started: {}", questTree);
     treeGuestService.addInitialQuestTree(questTree.toDomain());
     return ResponseEntity.created(new URI(VERSION_PATH + MERGE_TREES_URL)).body(questTree); //TODO  think in a way to be not necessary concat teh Strings
@@ -44,7 +45,7 @@ public class TreeQuestController {
 
   @SneakyThrows
   @PostMapping(ADD_NEW_TREE_URL)
-  public ResponseEntity<QuestTreeDto> addNewTree(@RequestBody QuestTreeDto questTree) {
+  public ResponseEntity<QuestTreeDto> addNewTree(@Valid @RequestBody QuestTreeDto questTree) {
     log.info("add-tree endpoint started: {}", questTree);
     treeGuestService.addNewQuestTree(questTree.toDomain());
     return ResponseEntity.created(new URI(VERSION_PATH + MERGE_TREES_URL)).body(questTree); //TODO  think in a way to be not necessary concat teh Strings

@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swisscom.treequest.dto.QuestTreeDto;
 import java.io.InputStream;
+import java.util.Objects;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -95,6 +96,14 @@ class TreeQuestControllerTest {
     assertEquals(orderTree.getChildren().get(1).getAttributes().get(0).getOperation(), UPDATE);
     assertEquals(orderTree.getChildren().get(1).getAttributes().get(1).getOperation(), DELETE);
     assertEquals(orderTree.getChildren().get(1).getAttributes().get(2).getOperation(), CREATE);
+  }
+
+  @Test
+  void shouldReturnBadRequest() {
+    QuestTreeDto initialTree = readTreeFromFile("initial_tree_wrong.json");
+    ResponseEntity<String[]> resourceAdd = restTemplate.postForEntity("http://localhost:" + port + "/v1/add-initial-tree", initialTree, String[].class);
+    assertEquals(resourceAdd.getStatusCode(), HttpStatus.BAD_REQUEST);
+    assertEquals("Id is mandatory", Objects.requireNonNull(resourceAdd.getBody())[0]);
   }
 
   @Test
