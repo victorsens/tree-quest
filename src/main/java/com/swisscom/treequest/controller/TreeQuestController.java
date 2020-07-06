@@ -40,7 +40,7 @@ public class TreeQuestController {
   public ResponseEntity<QuestTreeDto> addInitialTree(@Valid @RequestBody QuestTreeDto questTree) {
     log.info("add-tree endpoint started: {}", questTree);
     treeGuestService.addInitialQuestTree(questTree.toDomain());
-    return ResponseEntity.created(new URI(VERSION_PATH + MERGE_TREES_URL)).body(questTree); //TODO  think in a way to be not necessary concat teh Strings
+    return ResponseEntity.created(new URI(VERSION_PATH + MERGE_TREES_URL)).body(questTree);
   }
 
   @SneakyThrows
@@ -48,7 +48,7 @@ public class TreeQuestController {
   public ResponseEntity<QuestTreeDto> addNewTree(@Valid @RequestBody QuestTreeDto questTree) {
     log.info("add-tree endpoint started: {}", questTree);
     treeGuestService.addNewQuestTree(questTree.toDomain());
-    return ResponseEntity.created(new URI(VERSION_PATH + MERGE_TREES_URL)).body(questTree); //TODO  think in a way to be not necessary concat teh Strings
+    return ResponseEntity.created(new URI(VERSION_PATH + MERGE_TREES_URL)).body(questTree);
   }
 
   @DeleteMapping(CLEAN_TREE_URL)
