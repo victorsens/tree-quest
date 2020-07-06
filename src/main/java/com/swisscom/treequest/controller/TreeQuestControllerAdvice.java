@@ -1,7 +1,6 @@
 package com.swisscom.treequest.controller;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -19,5 +18,11 @@ public class TreeQuestControllerAdvice {
     log.error("Exception : ", e);
     return ResponseEntity.status(BAD_REQUEST).body(e.getBindingResult().getAllErrors().stream().map(
         DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new));
+  }
+
+  @ExceptionHandler({IllegalStateException.class})
+  public ResponseEntity<String> handleNotFoundException(IllegalStateException e) {
+    log.error("Exception : ", e);
+    return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
   }
 }

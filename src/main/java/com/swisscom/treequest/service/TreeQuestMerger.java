@@ -13,13 +13,14 @@ import com.swisscom.treequest.domain.QuestTree;
 import com.swisscom.treequest.domain.QuestTreeAttribute;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TreeQuestMerger { //TODO think best package to set it.
+public class TreeQuestMerger {
 
-    public QuestTree mergeTree(final QuestTree originalTree, final QuestTree newTree) {
-//      final QuestTree mergedTree =  originalTree.clone();
+
+    public QuestTree mergeTree(@NotNull final QuestTree originalTree, @NotNull final QuestTree newTree) {
       newTree.getChildren().forEach(newChild -> {
         final QuestTree mergedChild = originalTree.scanById(newChild.getId());
         if(mergedChild == null) {

@@ -5,6 +5,8 @@ import static com.swisscom.treequest.domain.BrickId.ROOT;
 import static com.swisscom.treequest.domain.QuestTreeOperations.NO_ACTION;
 
 import com.swisscom.treequest.domain.QuestTree;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +24,13 @@ public class TreeQuestServiceImpl implements TreeQuestService {
   }
 
   @Override
-  public void addInitialQuestTree(final QuestTree questTree) {
+  public void addInitialQuestTree(@Valid @NotNull final QuestTree questTree) {
     log.info("Add initial tree {}", questTree);
     initialTree = questTree;
   }
 
   @Override
-  public void addNewQuestTree(QuestTree questTree) {
+  public void addNewQuestTree(@Valid @NotNull QuestTree questTree) {
     log.info("Add new tree {}", questTree);
     newTree = questTree;
   }
@@ -36,11 +38,16 @@ public class TreeQuestServiceImpl implements TreeQuestService {
   @Override
   public QuestTree mergeQuestTrees() {
     log.info("start to merge the trees");
-    final QuestTree mergedTree = initialTree.clone();
-    mergedTree.setOperation(NO_ACTION);
-    mergedTree.setBrickId(ROOT);
-    mergedTree.getAttributes().values().forEach(att -> att.setOperation(NO_ACTION));
-    return treeQuestMerger.mergeTree(mergedTree, newTree);
+    if(initialTree != null && newTree != null) {
+      final QuestTree mergedTree = initialTree.clone();
+      mergedTree.setOperation(NO_ACTION);
+      mergedTree.setBrickId(ROOT);
+      mergedTree.getAttributes().values().forEach(att -> att.setOperation(NO_ACTION));
+      return treeQuestMerger.mergeTree(mergedTree, newTree);
+    } else {
+      throw new IllegalStateException("initialTree and newTree should be defined first to call this method.");
+    }
+
   }
 
   @Override

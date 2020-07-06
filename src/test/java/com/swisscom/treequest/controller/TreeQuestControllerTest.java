@@ -32,7 +32,7 @@ class TreeQuestControllerTest {
   private TestRestTemplate restTemplate;
 
   @BeforeEach
-  void shouldAddTree() {
+  void setup() {
     restTemplate.delete("http://localhost:" + port + "/v1/clean-tree");
     QuestTreeDto initialTree = readTreeFromFile("initial_tree.json");
     ResponseEntity<String> resourceAdd = restTemplate.postForEntity("http://localhost:" + port + "/v1/add-initial-tree", initialTree, String.class);
