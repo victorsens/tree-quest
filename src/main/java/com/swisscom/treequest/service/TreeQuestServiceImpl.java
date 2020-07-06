@@ -1,6 +1,9 @@
 package com.swisscom.treequest.service;
 
 
+import static com.swisscom.treequest.domain.BrickId.ROOT;
+import static com.swisscom.treequest.domain.QuestTreeOperations.NO_ACTION;
+
 import com.swisscom.treequest.domain.QuestTree;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +36,11 @@ public class TreeQuestServiceImpl implements TreeQuestService {
   @Override
   public QuestTree mergeQuestTrees() {
     log.info("start to merge the trees");
-    return treeQuestMerger.mergeTree(initialTree, newTree);
+    final QuestTree mergedTree = initialTree.clone();
+    mergedTree.setOperation(NO_ACTION);
+    mergedTree.setBrickId(ROOT);
+    mergedTree.getAttributes().values().forEach(att -> att.setOperation(NO_ACTION));
+    return treeQuestMerger.mergeTree(mergedTree, newTree);
   }
 
   @Override

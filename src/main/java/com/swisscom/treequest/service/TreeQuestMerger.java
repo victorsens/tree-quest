@@ -3,7 +3,6 @@ package com.swisscom.treequest.service;
 import static com.swisscom.treequest.domain.BrickId.IN_BOTH_TREES;
 import static com.swisscom.treequest.domain.BrickId.ONLY_IN_INITIAL;
 import static com.swisscom.treequest.domain.BrickId.ONLY_IN_NEW;
-import static com.swisscom.treequest.domain.BrickId.ROOT;
 import static com.swisscom.treequest.domain.QuestTreeOperations.CREATE;
 import static com.swisscom.treequest.domain.QuestTreeOperations.DELETE;
 import static com.swisscom.treequest.domain.QuestTreeOperations.NO_ACTION;
@@ -19,40 +18,46 @@ import org.springframework.stereotype.Component;
 @Component
 public class TreeQuestMerger { //TODO think best package to set it.
 
-    public QuestTree mergeTree(QuestTree originalTree, final QuestTree newTree) {
-      final QuestTree mergedTree =  originalTree.clone();
-      mergedTree.setOperation(NO_ACTION);
-      mergedTree.setBrickId(ROOT);
-      mergedTree.getAttributes().values().forEach(att -> att.setOperation(NO_ACTION));
-
+    public QuestTree mergeTree(final QuestTree originalTree, final QuestTree newTree) {
+//      final QuestTree mergedTree =  originalTree.clone();
       newTree.getChildren().forEach(newChild -> {
-        final QuestTree mergedChild = mergedTree.scanById(newChild.getId());
+        final QuestTree mergedChild = originalTree.scanById(newChild.getId());
         if(mergedChild == null) {
-          addToTree(mergedTree, newChild.clone());
+          addChildToTree(originalTree, newChild.clone());
         } else {
           updateNode(mergedChild, newChild.clone());
         }
 
       });
 
-      mergedTree.getChildren().forEach(originalChild -> {
+      originalTree.getChildren().forEach(originalChild -> {
         final QuestTree newChild = newTree.scanById(originalChild.getId());
         if(newChild == null) {
-          originalChild.setOperation(DELETE);
-          originalChild.setBrickId(ONLY_IN_INITIAL);
-          originalChild.getAttributes().values().forEach(att -> att.setOperation(DELETE));
+          deleteTree(originalChild);
         }
       });
 
-      return mergedTree;
+      return originalTree;
     }
 
-    private void addToTree(final QuestTree mergedChild, final QuestTree newChild) {
-      newChild.setBrickId(ONLY_IN_NEW);
-      newChild.setOperation(CREATE);
-      newChild.getAttributes().values().forEach(att -> att.setOperation(CREATE));
-      mergedChild.getChildren().add(newChild);
-      sort(mergedChild.getChildren());
+    private void addChildToTree(final QuestTree mergedTree, final QuestTree newChild) {
+      mergedTree.getChildren().add(newChild);
+      sort(mergedTree.getChildren());
+      setCreateAttributeInAllTree(newChild);
+    }
+
+    private void setCreateAttributeInAllTree(final QuestTree tree) {
+      tree.setBrickId(ONLY_IN_NEW);
+      tree.setOperation(CREATE);
+      tree.getAttributes().values().forEach(att -> att.setOperation(CREATE));
+      tree.getChildren().forEach(this::setCreateAttributeInAllTree);
+    }
+
+    private void deleteTree(QuestTree tree) {
+      tree.setOperation(DELETE);
+      tree.setBrickId(ONLY_IN_INITIAL);
+      tree.getAttributes().values().forEach(att -> att.setOperation(DELETE));
+      tree.getChildren().forEach(this::deleteTree);
     }
 
     private void updateNode(final QuestTree merged, final QuestTree newOne) {
@@ -60,7 +65,8 @@ public class TreeQuestMerger { //TODO think best package to set it.
       merged.setOperation(UPDATE);
       merged.setRelations(newOne.getRelations());
       merged.setBrickId(IN_BOTH_TREES);
-      mergeAttributes(merged.getAttributes(),newOne.getAttributes());
+      mergeAttributes(merged.getAttributes(), newOne.getAttributes());
+      mergeTree(merged, newOne);
     }
 
     private void mergeAttributes(Map<String, QuestTreeAttribute> mergedAttributes, Map<String, QuestTreeAttribute> newAttributes) {
