@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.swisscom</groupId>
   <artifactId>tree-quest</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.1-SNAPSHOT</version>
   <name>tree-quest</name>
   <description>Demo project for Spring Boot</description>
 
@@ -76,7 +76,17 @@
   </build>
 
 
+<!--  <scm>
+    <connection>scm:git:git://github.com/hristo-vrigazov/bromium.git</connection>
+    <developerConnection>scm:git:git://github.com/hristo-vrigazov/bromium.git</developerConnection>
+    <url>https://github.com/hristo-vrigazov/bromium</url>
+    <tag>com.hribol.bromium.dsl.parent-1.0.0</tag>
+  </scm>-->
+
   <scm>
+    <connection>scm:git:git:://github.com/victorsens/tree-quest.git</connection>
+    <developerConnection>scm:git:git:://github.com/victorsens/tree-quest.git</developerConnection>
+    <url>https://github.com/victorsens/tree-quest</url>
     <tag>tree-quest-0.0.1</tag>
   </scm>
 </project>
