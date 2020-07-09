@@ -65,8 +65,8 @@ jobs:
           name: build and push container
           command: |
              java -version
-             #            git config user.email ${GIT_EMAIL}
-             #            git config user.name ${GIT_USER}
+             git config user.email ${GIT_EMAIL}
+             git config user.name ${GIT_USER}
              ./mvnw -Dmaven.test.skip=true -Dmaven.javadoc.failOnError=false --batch-mode release:clean release:prepare  -e
 
 
