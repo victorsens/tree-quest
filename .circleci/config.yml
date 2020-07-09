@@ -67,7 +67,7 @@ jobs:
              java -version
              git config user.email ${GIT_EMAIL}
              git config user.name ${GIT_USER}
-             ./mvnw -Dmaven.test.skip=true -DscmCommentPrefix=[skip ci] -Dmaven.javadoc.failOnError=false --batch-mode release:clean release:prepare  -e
+             ./mvnw -Dmaven.test.skip=true -DscmCommentPrefix='[skip ci]' -Dmaven.javadoc.failOnError=false --batch-mode release:clean release:prepare  -e
 
 
 
