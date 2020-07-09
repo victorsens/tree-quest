@@ -1,0 +1,77 @@
+# Java Maven CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2.1
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:11-jdk
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    working_directory: ~/repo
+
+    environment:
+      # Customize the JVM maximum heap limit
+      MAVEN_OPTS: -Xmx3200m
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: mvn dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+
+      # run tests!
+      - run:
+          name: Build and unit test
+          command: |
+            mvn install
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: hello-spring-mvn-V2-{{ checksum "pom.xml" }}
+      - store_test_results:
+          path: target/surefire-reports
+  publish-docker:
+    machine: true
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - hello-spring-mvn-V2-{{ checksum "pom.xml" }}
+            - hello-spring-mvn-V2
+      - run:
+          name: build and push container
+          command: |
+             java -version
+             export PROJECT_VERSION=$(./mvnw -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+             ./mvnw spring-boot:build-image -DskipTests=true  -e
+#-Dspring-boot.build-image.imageName=victorsens/credit-limit-track:$PROJECT_VERSION
+
+
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+#      - publish-docker
+#          requires:
+#            - build
