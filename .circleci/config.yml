@@ -91,35 +91,35 @@ jobs:
            ./mvnw compile jib:build -DskipTests=true \
               -Ddocker.tag=$PROJECT_VERSION \
               -Dbuild.num=$CIRCLE_BUILD_NUM
-    deploy:
-      docker:
-        - image: google/cloud-sdk
-      description: Deploy application to Google Kubernetes Engine
-      working_directory: ~/repo
-      steps:
-        - checkout
-        #Creating the Google cloud credentials JSON file.
-        - run: echo ${GCLOUD_SERVICE_KEY} > key.json
-        # Authentication in google cloud
-        - run: gcloud auth activate-service-account --key-file key.json
-        # setting the region used to deploy this image
-        - run: gcloud config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-        # Setting google clouse project to work.
-        - run: gcloud config set project ${GOOGLE_PROJECT_ID}
-        - run:
-            name: set the credentials to work with cluster
-            command: |
-              set +e
-              gcloud container clusters get-credentials ${GOOGLE_CLUSTER_ID} --zone ${GOOGLE_COMPUTE_ZONE} --project ${GOOGLE_PROJECT_ID}
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    description: Deploy application to Google Kubernetes Engine
+    working_directory: ~/repo
+    steps:
+      - checkout
+      #Creating the Google cloud credentials JSON file.
+      - run: echo ${GCLOUD_SERVICE_KEY} > key.json
+      # Authentication in google cloud
+      - run: gcloud auth activate-service-account --key-file key.json
+      # setting the region used to deploy this image
+      - run: gcloud config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+      # Setting google clouse project to work.
+      - run: gcloud config set project ${GOOGLE_PROJECT_ID}
+      - run:
+          name: set the credentials to work with cluster
+          command: |
+            set +e
+            gcloud container clusters get-credentials ${GOOGLE_CLUSTER_ID} --zone ${GOOGLE_COMPUTE_ZONE} --project ${GOOGLE_PROJECT_ID}
 
-        # Generating the YAML file to deploy application. Get a template file(production-deployment.yaml.template) and setting the IMAGE_URL to be deployed.
-        - run:
-            name: generate deploy yaml file from the template file
-            command: |
-              cat "./k8s/production-deployment.yaml" | sed "s/{{imageURL}}/${PROJECT_IMAGE}:$CIRCLE_PREVIOUS_BUILD_NUM/g" > ./k8s/production/production-deployment.yaml
-            environment:
-              PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest
-        - run: kubectl apply  -f ./k8s/production/
+      # Generating the YAML file to deploy application. Get a template file(production-deployment.yaml.template) and setting the IMAGE_URL to be deployed.
+      - run:
+          name: generate deploy yaml file from the template file
+          command: |
+            cat "./k8s/production-deployment.yaml" | sed "s/{{imageURL}}/${PROJECT_IMAGE}:$CIRCLE_PREVIOUS_BUILD_NUM/g" > ./k8s/production/production-deployment.yaml
+          environment:
+            PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest
+      - run: kubectl apply  -f ./k8s/production/
 workflows:
   version: 2
   build-deploy:
