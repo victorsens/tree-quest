@@ -119,7 +119,7 @@ jobs:
             cat "./k8s/production-deployment.yaml" | sed "s/{{imageURL}}/${PROJECT_IMAGE}:$CIRCLE_PREVIOUS_BUILD_NUM/g" > ./k8s/production-deployment.yaml
           environment:
             PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest
-      - run: kubectl apply  -f ./k8s/production/
+      - run: kubectl apply  -f ./k8s/
 workflows:
   version: 2
   build-deploy:
