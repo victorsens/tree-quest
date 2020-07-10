@@ -116,9 +116,9 @@ jobs:
       - run:
           name: generate deploy yaml file from the template file
           command: |
-            cat "./k8s/production-deployment.yaml.template" | sed "s/{{imageURL}}/${PROJECT_IMAGE}:$CIRCLE_PREVIOUS_BUILD_NUM/g" > ./k8s/production-deployment.yaml
+            cat "./k8s/production-deployment.yaml.template" | sed "s/{{imageURL}}/${PROJECT_IMAGE}$CIRCLE_PREVIOUS_BUILD_NUM/g" > ./k8s/production-deployment.yaml
           environment:
-            PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest
+            PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest:circle_ci_build_
       - run: kubectl apply  -f ./k8s/
 workflows:
   version: 2
@@ -129,11 +129,11 @@ workflows:
             context: GIT_CONFIGURATION
             requires:
               - build
-      - SCM:
-          context: GIT_CONFIGURATION
-          requires:
-            - publish-docker
       - deploy:
             context: GCP_CONFIGURATION
             requires:
               - publish-docker
+      - SCM:
+          context: GIT_CONFIGURATION
+          requires:
+            - publish-docker
