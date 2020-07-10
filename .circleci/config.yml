@@ -66,13 +66,15 @@ jobs:
           command: |
              cp .mvn/wrapper/settings.xml ~/.m2/settings.xml
              echo "<settingsSecurity><master>${maven_security_master}</master></settingsSecurity>" > ~/.m2/settings-security.xml
+             export PROJECT_VERSION = $( ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout  | sed 's/-SNAPSHOT//'  )
              git config user.email ${GIT_EMAIL}
              git config user.name ${GIT_USER}
              ./mvnw -DskipTests=true -DscmCommentPrefix='[skip ci]' \
                 -Dmaven.javadoc.failOnError=false \
                 --batch-mode release:clean \
-                compile jib:build -DskipTests=true \
                 release:prepare  -e
+             ./mvnw compile jib:build -DskipTests=true \
+                -Ddocker.tag=$PROJECT_VERSION
 
 workflows:
   version: 2
