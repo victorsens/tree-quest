@@ -81,7 +81,7 @@
           </from>
           <to>
             <image>registry.hub.docker.com/victorsens/tree-quest:${docker.tag}</image>
-            <tags>latest,${build.num} </tags>
+            <tags>latest,circle_ci_build_${build.num} </tags>
           </to>
           <container>
             <jvmFlags>
