@@ -4,10 +4,6 @@
 #
 version: 2.1
 jobs:
-  parameters:
-    project_version:
-      type: string
-      default: null
   build:
     docker:
       # specify the version you desire here
