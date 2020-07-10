@@ -18,9 +18,9 @@ spec:
             memory: "2048Mi"
             cpu: "100m"
         imagePullPolicy: Always
-      readinessProbe:
-          httpGet:
-              path: /actuator/health
-              port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        readinessProbe:
+            httpGet:
+                path: /actuator/health
+                port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
