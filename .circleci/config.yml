@@ -64,16 +64,15 @@ jobs:
       - run:
           name: build and push container
           command: |
-             java -version
-             git config user.email ${GIT_EMAIL}
-             git config user.name ${GIT_USER}
-             ./mvnw -DskipTests=true -DscmCommentPrefix='[skip ci]' -Dmaven.javadoc.failOnError=false --batch-mode release:clean release:prepare  -e
-
-             ./mvnw dependency:go-offline
              cp .mvn/wrapper/settings.xml ~/.m2/settings.xml
              echo "<settingsSecurity><master>${maven_security_master}</master></settingsSecurity>" > ~/.m2/settings-security.xml
-             ./mvnw compile jib:build -DskipTests=true \
-
+             git config user.email ${GIT_EMAIL}
+             git config user.name ${GIT_USER}
+             ./mvnw -DskipTests=true -DscmCommentPrefix='[skip ci]' \
+                -Dmaven.javadoc.failOnError=false \
+                --batch-mode release:clean \
+                jib:build -DskipTests=true \
+                release:prepare  -e
 
 workflows:
   version: 2
