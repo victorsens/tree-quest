@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: tree-quest
-        image: victorsens/tree-quest:0.0.1-SNAPSHOT
+        image: {{imageURL}}
         resources:
           limits:
             memory: "2048Mi"
