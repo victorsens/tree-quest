@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.swisscom</groupId>
   <artifactId>tree-quest</artifactId>
-  <version>0.0.10-SNAPSHOT</version>
+  <version>0.0.11-SNAPSHOT</version>
   <name>tree-quest</name>
   <description>Demo project for Spring Boot</description>
 
