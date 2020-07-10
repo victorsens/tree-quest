@@ -134,6 +134,6 @@ workflows:
           requires:
             - publish-docker
       - deploy:
-            context: GIT_CONFIGURATION
+            context: GCP_CONFIGURATION
             requires:
               - publish-docker
