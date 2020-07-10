@@ -80,8 +80,8 @@ workflows:
   version: 2
   build-deploy:
     jobs:
-#      - build
+      - build
       - versioning:
           context: GIT_CONFIGURATION
-#          requires:
-#            - build
+          requires:
+            - build
