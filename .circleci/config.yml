@@ -71,15 +71,15 @@ jobs:
              ./mvnw -DskipTests=true -DscmCommentPrefix='[skip ci]' \
                 -Dmaven.javadoc.failOnError=false \
                 --batch-mode release:clean \
-                jib:build -DskipTests=true \
+                compile jib:build -DskipTests=true \
                 release:prepare  -e
 
 workflows:
   version: 2
   build-deploy:
     jobs:
-      - build
+#      - build
       - versioning:
           context: GIT_CONFIGURATION
-          requires:
-            - build
+#          requires:
+#            - build
