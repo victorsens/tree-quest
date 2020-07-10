@@ -74,6 +74,9 @@
         <artifactId>jib-maven-plugin</artifactId>
         <version>0.9.7</version>
         <configuration>
+          <from>
+            <image>openjdk:11.0.7</image>
+          </from>
           <to>
             <image>registry.hub.docker.com/victorsens/tree-quest:${project.version}</image>
           </to>
