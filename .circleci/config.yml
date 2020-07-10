@@ -48,7 +48,7 @@ jobs:
           key: hello-spring-mvn-V2-{{ checksum "pom.xml" }}
       - store_test_results:
           path: target/surefire-reports
-  versioning:
+  SCM:
     docker:
       - image: circleci/openjdk:11-jdk-browsers
     working_directory: ~/repo
@@ -62,26 +62,43 @@ jobs:
             - hello-spring-mvn-V2-{{ checksum "pom.xml" }}
             - hello-spring-mvn-V2
       - run:
-          name: build and push container
+          name: Create version and SCM Tags.
           command: |
-             cp .mvn/wrapper/settings.xml ~/.m2/settings.xml
-             echo "<settingsSecurity><master>${maven_security_master}</master></settingsSecurity>" > ~/.m2/settings-security.xml
              export PROJECT_VERSION=$( ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout  | sed 's/-SNAPSHOT//')
+             echo 'export PROJECT_VERSION=$PROJECT_VERSION' >> $BASH_ENV
              git config user.email ${GIT_EMAIL}
              git config user.name ${GIT_USER}
-             ./mvnw -DskipTests=true -DscmCommentPrefix='[skip ci]' \
-                -Dmaven.javadoc.failOnError=false \
-                --batch-mode release:clean \
-                release:prepare  -e
-             ./mvnw compile jib:build -DskipTests=true \
-                -Ddocker.tag=$PROJECT_VERSION
+#             ./mvnw -DskipTests=true -DscmCommentPrefix='[skip ci]' \
+#                -Dmaven.javadoc.failOnError=false \
+#                --batch-mode release:clean \
+#                release:prepare  -e
+
+  publish-docker:
+    docker:
+      - image: circleci/openjdk:11-jdk-browsers
+    working_directory: ~/repo
+    steps:
+     - checkout
+     - restore_cache:
+         keys:
+           - hello-spring-mvn-V2-{{ checksum "pom.xml" }}
+           - hello-spring-mvn-V2
+     - run:
+         name: build and push container
+         command: |
+           source $BASH_ENV
+           echo $PROJECT_VERSION
+#           cp .mvn/wrapper/settings.xml ~/.m2/settings.xml
+#           echo "<settingsSecurity><master>${maven_security_master}</master></settingsSecurity>" > ~/.m2/settings-security.xml
+#           ./mvnw compile jib:build -DskipTests=true \
+#              -Ddocker.tag=$PROJECT_VERSION
 
 workflows:
   version: 2
   build-deploy:
     jobs:
       - build
-      - versioning:
+      - SCM:
           context: GIT_CONFIGURATION
           requires:
             - build
