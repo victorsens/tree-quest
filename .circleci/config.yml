@@ -112,11 +112,11 @@ jobs:
             set +e
             gcloud container clusters get-credentials ${GOOGLE_CLUSTER_ID} --zone ${GOOGLE_COMPUTE_ZONE} --project ${GOOGLE_PROJECT_ID}
 
-      # Generating the YAML file to deploy application. Get a template file(production-deployment.yaml.template) and setting the IMAGE_URL to be deployed.
+      # Generating the YAML file to deploy application. Get a template file(production-deployment.yaml.template.template) and setting the IMAGE_URL to be deployed.
       - run:
           name: generate deploy yaml file from the template file
           command: |
-            cat "./k8s/production-deployment.yaml" | sed "s/{{imageURL}}/${PROJECT_IMAGE}:$CIRCLE_PREVIOUS_BUILD_NUM/g" > ./k8s/production-deployment.yaml
+            cat "./k8s/production-deployment.yaml.template" | sed "s/{{imageURL}}/${PROJECT_IMAGE}:$CIRCLE_PREVIOUS_BUILD_NUM/g" > ./k8s/production-deployment.yaml
           environment:
             PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest
       - run: kubectl apply  -f ./k8s/
