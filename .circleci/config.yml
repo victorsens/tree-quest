@@ -102,3 +102,7 @@ workflows:
           context: GIT_CONFIGURATION
           requires:
             - build
+      - publish-docker:
+            context: GIT_CONFIGURATION
+            requires:
+              - build
