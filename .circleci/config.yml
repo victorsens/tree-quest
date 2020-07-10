@@ -64,14 +64,12 @@ jobs:
       - run:
           name: Create version and SCM Tags.
           command: |
-             export PROJECT_VERSION=$( ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout  | sed 's/-SNAPSHOT//')
-             echo 'export PROJECT_VERSION=$PROJECT_VERSION' >> $BASH_ENV
              git config user.email ${GIT_EMAIL}
              git config user.name ${GIT_USER}
-#             ./mvnw -DskipTests=true -DscmCommentPrefix='[skip ci]' \
-#                -Dmaven.javadoc.failOnError=false \
-#                --batch-mode release:clean \
-#                release:prepare  -e
+             ./mvnw -DskipTests=true -DscmCommentPrefix='[skip ci]' \
+                -Dmaven.javadoc.failOnError=false \
+                --batch-mode release:clean \
+                release:prepare  -e
 
   publish-docker:
     docker:
@@ -86,23 +84,23 @@ jobs:
      - run:
          name: build and push container
          command: |
-           source $BASH_ENV
+           export PROJECT_VERSION=$( ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout  | sed 's/-SNAPSHOT//')
            echo $PROJECT_VERSION
-#           cp .mvn/wrapper/settings.xml ~/.m2/settings.xml
-#           echo "<settingsSecurity><master>${maven_security_master}</master></settingsSecurity>" > ~/.m2/settings-security.xml
-#           ./mvnw compile jib:build -DskipTests=true \
-#              -Ddocker.tag=$PROJECT_VERSION
+           cp .mvn/wrapper/settings.xml ~/.m2/settings.xml
+           echo "<settingsSecurity><master>${maven_security_master}</master></settingsSecurity>" > ~/.m2/settings-security.xml
+           ./mvnw compile jib:build -DskipTests=true \
+              -Ddocker.tag=$PROJECT_VERSION
 
 workflows:
   version: 2
   build-deploy:
     jobs:
       - build
-      - SCM:
-          context: GIT_CONFIGURATION
-          requires:
-            - build
       - publish-docker:
             context: GIT_CONFIGURATION
             requires:
-              - SCM
+              - build
+      - SCM:
+          context: GIT_CONFIGURATION
+          requires:
+            - publish-docker
