@@ -7,3 +7,5 @@ spec:
     checkIntervalSec: 5
     timeoutSec: 40
     requestPath: /tree/actuator/health
+    port: 80
+    type: http
