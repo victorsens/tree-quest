@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class TreeQuestController {
 
-  protected static final String VERSION_PATH = "/tree/v1/";
+  protected static final String VERSION_PATH = "/v1/";
   private static final String MERGE_TREES_URL =  "merge-trees";
   private static final String ADD_INITIAL_TREE_URL =  "add-initial-tree";
   private static final String ADD_NEW_TREE_URL = "add-new-tree";
