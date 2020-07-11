@@ -1,0 +1,9 @@
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: tree-quest-hc-config
+spec:
+  healthCheck:
+    checkIntervalSec: 5
+    timeoutSec: 40
+    requestPath: /tree/actuator/health
