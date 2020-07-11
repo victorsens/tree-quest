@@ -5,7 +5,7 @@ metadata:
   labels:
     app: tree-quest-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: tree-quest-backend
   ports:
