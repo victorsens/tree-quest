@@ -137,4 +137,4 @@ workflows:
       - SCM:
           context: GIT_CONFIGURATION
           requires:
-            - publish-docker
+            - deploy
