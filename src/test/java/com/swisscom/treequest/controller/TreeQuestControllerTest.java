@@ -33,13 +33,13 @@ class TreeQuestControllerTest {
 
   @BeforeEach
   void setup() {
-    restTemplate.delete("http://localhost:" + port + "/v1/clean-tree");
+    restTemplate.delete("http://localhost:" + port + "/tree/v1/clean-tree");
     QuestTreeDto initialTree = readTreeFromFile("initial_tree.json");
-    ResponseEntity<String> resourceAdd = restTemplate.postForEntity("http://localhost:" + port + "/v1/add-initial-tree", initialTree, String.class);
+    ResponseEntity<String> resourceAdd = restTemplate.postForEntity("http://localhost:" + port + "/tree/v1/add-initial-tree", initialTree, String.class);
     assertEquals(resourceAdd.getStatusCode(), HttpStatus.CREATED);
 
     QuestTreeDto newTree = readTreeFromFile("new_tree.json");
-    resourceAdd = restTemplate.postForEntity("http://localhost:" + port + "/v1/add-new-tree", newTree, String.class);
+    resourceAdd = restTemplate.postForEntity("http://localhost:" + port + "/tree/v1/add-new-tree", newTree, String.class);
     assertEquals(resourceAdd.getStatusCode(), HttpStatus.CREATED);
   }
 
@@ -47,7 +47,7 @@ class TreeQuestControllerTest {
 
   @Test
   void shouldMergeTreeOrdered() {
-    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/merge-trees", QuestTreeDto.class);
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/tree/v1/merge-trees", QuestTreeDto.class);
     assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
     QuestTreeDto orderTree = resourceRetrieve.getBody();
     assert orderTree != null;
@@ -58,7 +58,7 @@ class TreeQuestControllerTest {
 
   @Test
   void shouldSetOperationToDelete() {
-    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/merge-trees", QuestTreeDto.class);
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/tree/v1/merge-trees", QuestTreeDto.class);
     assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
     QuestTreeDto orderTree = resourceRetrieve.getBody();
     assert orderTree != null;
@@ -68,7 +68,7 @@ class TreeQuestControllerTest {
 
   @Test
   void shouldSetOperationToCreate() {
-    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/merge-trees", QuestTreeDto.class);
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/tree/v1/merge-trees", QuestTreeDto.class);
     assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
     QuestTreeDto orderTree = resourceRetrieve.getBody();
     assert orderTree != null;
@@ -78,7 +78,7 @@ class TreeQuestControllerTest {
 
   @Test
   void shouldSetOperationToNoAction() {
-    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/merge-trees", QuestTreeDto.class);
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/tree/v1/merge-trees", QuestTreeDto.class);
     assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
     QuestTreeDto orderTree = resourceRetrieve.getBody();
     assert orderTree != null;
@@ -88,7 +88,7 @@ class TreeQuestControllerTest {
 
   @Test
   void shouldMergeAttributesInBothLists() {
-    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/merge-trees", QuestTreeDto.class);
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/tree/v1/merge-trees", QuestTreeDto.class);
     assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
     QuestTreeDto orderTree = resourceRetrieve.getBody();
     assert orderTree != null;
@@ -101,14 +101,14 @@ class TreeQuestControllerTest {
   @Test
   void shouldReturnBadRequest() {
     QuestTreeDto initialTree = readTreeFromFile("initial_tree_wrong.json");
-    ResponseEntity<String[]> resourceAdd = restTemplate.postForEntity("http://localhost:" + port + "/v1/add-initial-tree", initialTree, String[].class);
+    ResponseEntity<String[]> resourceAdd = restTemplate.postForEntity("http://localhost:" + port + "/tree/v1/add-initial-tree", initialTree, String[].class);
     assertEquals(resourceAdd.getStatusCode(), HttpStatus.BAD_REQUEST);
     assertEquals("Id is mandatory", Objects.requireNonNull(resourceAdd.getBody())[0]);
   }
 
   @Test
   void shouldSetBrickIdToInitial() {
-    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/v1/merge-trees", QuestTreeDto.class);
+    ResponseEntity<QuestTreeDto> resourceRetrieve  = restTemplate.getForEntity("http://localhost:" + port + "/tree/v1/merge-trees", QuestTreeDto.class);
     assertEquals(resourceRetrieve.getStatusCode(), HttpStatus.OK);
     QuestTreeDto orderTree = resourceRetrieve.getBody();
     assert orderTree != null;
