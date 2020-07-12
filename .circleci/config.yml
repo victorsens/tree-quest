@@ -71,7 +71,7 @@ jobs:
                 --batch-mode release:clean \
                 release:prepare  -e
 
-  publish-docker:
+  publish-image:
     docker:
       - image: circleci/openjdk:11-jdk-browsers
     working_directory: ~/repo
@@ -90,7 +90,7 @@ jobs:
            echo "<settingsSecurity><master>${maven_security_master}</master></settingsSecurity>" > ~/.m2/settings-security.xml
            ./mvnw compile jib:build -DskipTests=true \
               -Ddocker.tag=$PROJECT_VERSION \
-              -Dbuild.num=$CIRCLE_BUILD_NUM
+              -Dbuild.num=$CIRCLE_WORKFLOW_ID
   deploy:
     docker:
       - image: google/cloud-sdk
@@ -116,7 +116,7 @@ jobs:
       - run:
           name: generate deploy yaml file from the template file
           command: |
-            cat "./k8s/production-deployment.yaml.template" | sed "s/{{imageURL}}/${PROJECT_IMAGE}$CIRCLE_PREVIOUS_BUILD_NUM/g" > ./k8s/production-deployment.yaml
+            cat "./k8s/production-deployment.yaml.template" | sed "s/{{imageURL}}/${PROJECT_IMAGE}$CIRCLE_WORKFLOW_ID/g" > ./k8s/production-deployment.yaml
           environment:
             PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest:circle_ci_build_
       - run: kubectl apply  -f ./k8s/
@@ -126,15 +126,15 @@ workflows:
   build-deploy:
     jobs:
       - build
-      - publish-docker:
+      - publish-image:
             context: GIT_CONFIGURATION
             requires:
               - build
+      - SCM:
+            context: GIT_CONFIGURATION
+            requires:
+              - publish-image
       - deploy:
             context: GCP_CONFIGURATION
             requires:
-              - publish-docker
-      - SCM:
-          context: GIT_CONFIGURATION
-          requires:
-            - deploy
+              - publish-image
