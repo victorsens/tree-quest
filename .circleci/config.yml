@@ -137,4 +137,4 @@ workflows:
       - deploy:
             context: GCP_CONFIGURATION
             requires:
-              - publish-image
+              - SCM
