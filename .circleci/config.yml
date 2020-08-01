@@ -116,6 +116,7 @@ jobs:
           command: |
             cd ./k8s/
             /kustomize/kustomize edit set image ${PROJECT_IMAGE}$CIRCLE_WORKFLOW_ID
+            cat kustomization.yml
             /kustomize/kustomize build > ./kustomized-deployment.yaml
             cat ./kustomized-deployment.yaml
             kubectl apply -f ./kustomized-deployment.yaml
