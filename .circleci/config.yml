@@ -119,8 +119,16 @@ jobs:
             cat "./k8s/production-deployment.yaml.template" | sed "s/{{imageURL}}/${PROJECT_IMAGE}$CIRCLE_WORKFLOW_ID/g" > ./k8s/production-deployment.yaml
           environment:
             PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest:circle_ci_build_
-      - run: kubectl apply  -f ./k8s/
-      - run: kubectl rollout status deployment/tree-quest-backend
+      - run:
+          name: Deploy images to the cluster.
+          command: |
+            cd ./k8s/
+            kustomize edit set image ${PROJECT_IMAGE}
+            cat kustomization.yml
+            kustomize build > ./kustomized-deployment.yaml
+            cat ./kustomized-deployment.yaml
+            kubectl apply -f ./kustomized-deployment.yaml
+            kubectl rollout status deployment/tree-quest-backend
 workflows:
   version: 2
   build-deploy:
@@ -134,7 +142,13 @@ workflows:
             context: GIT_CONFIGURATION
             requires:
               - publish-image
+            filters:
+              branches:
+                only: master
       - deploy:
             context: GCP_CONFIGURATION
             requires:
               - SCM
+            filters:
+              branches:
+                only: master
