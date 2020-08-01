@@ -93,7 +93,7 @@ jobs:
               -Dbuild.num=$CIRCLE_WORKFLOW_ID
   deploy:
     docker:
-      - image: google/cloud-sdk
+      - image: victorsens/gcp_setup:latest
     description: Deploy application to Google Kubernetes Engine
     working_directory: ~/repo
     steps:
@@ -125,7 +125,7 @@ jobs:
             cd ./k8s/
             kustomize edit set image ${PROJECT_IMAGE}
             cat kustomization.yml
-            kustomize build > ./kustomized-deployment.yaml
+            /kustomize/kustomize build > ./kustomized-deployment.yaml
             cat ./kustomized-deployment.yaml
             kubectl apply -f ./kustomized-deployment.yaml
             kubectl rollout status deployment/tree-quest-backend
