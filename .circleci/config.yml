@@ -129,6 +129,8 @@ jobs:
             cat ./kustomized-deployment.yaml
             kubectl apply -f ./kustomized-deployment.yaml
             kubectl rollout status deployment/tree-quest-backend
+          environment:
+             PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest:circle_ci_build_
 workflows:
   version: 2
   build-deploy:
