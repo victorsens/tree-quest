@@ -1,2 +1,3 @@
 resources:
   - production-deployment.yaml
+  - production-services.yaml
