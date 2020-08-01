@@ -123,7 +123,7 @@ jobs:
           name: Deploy images to the cluster.
           command: |
             cd ./k8s/
-            kustomize edit set image ${PROJECT_IMAGE}
+            /kustomize/kustomize edit set image ${PROJECT_IMAGE}
             cat kustomization.yml
             /kustomize/kustomize build > ./kustomized-deployment.yaml
             cat ./kustomized-deployment.yaml
