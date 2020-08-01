@@ -142,13 +142,13 @@ workflows:
             context: GIT_CONFIGURATION
             requires:
               - publish-image
-            filters:
-              branches:
-                only: master
+#            filters:
+#              branches:
+#                only: master
       - deploy:
             context: GCP_CONFIGURATION
             requires:
               - SCM
-            filters:
-              branches:
-                only: master
+#            filters:
+#              branches:
+#                only: master
