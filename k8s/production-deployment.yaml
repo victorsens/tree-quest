@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: tree-quest
-        image: victorsens/tree-quest:latest
+        image: registry.hub.docker.com/victorsens/tree-quest
         resources:
           limits:
             memory: "2048Mi"
@@ -26,3 +26,4 @@ spec:
                 port: 8080
             initialDelaySeconds: 5
             periodSeconds: 5
+

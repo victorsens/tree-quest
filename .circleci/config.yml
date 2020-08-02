@@ -111,24 +111,18 @@ jobs:
           command: |
             set +e
             gcloud container clusters get-credentials ${GOOGLE_CLUSTER_ID} --zone ${GOOGLE_COMPUTE_ZONE} --project ${GOOGLE_PROJECT_ID}
-
-      # Generating the YAML file to deploy application. Get a template file(production-deployment.yaml.template.template) and setting the IMAGE_URL to be deployed.
-      - run:
-          name: generate deploy yaml file from the template file
-          command: |
-            cat "./k8s/production-deployment.yaml.template" | sed "s/{{imageURL}}/${PROJECT_IMAGE}$CIRCLE_WORKFLOW_ID/g" > ./k8s/production-deployment.yaml
-          environment:
-            PROJECT_IMAGE: registry.hub.docker.com\/victorsens\/tree-quest:circle_ci_build_
       - run:
           name: Deploy images to the cluster.
           command: |
             cd ./k8s/
-            kustomize edit set image ${PROJECT_IMAGE}
+            /kustomize/kustomize edit set image ${PROJECT_IMAGE}$CIRCLE_WORKFLOW_ID
             cat kustomization.yml
             /kustomize/kustomize build > ./kustomized-deployment.yaml
             cat ./kustomized-deployment.yaml
             kubectl apply -f ./kustomized-deployment.yaml
             kubectl rollout status deployment/tree-quest-backend
+          environment:
+             PROJECT_IMAGE: registry.hub.docker.com/victorsens/tree-quest:circle_ci_build_
 workflows:
   version: 2
   build-deploy:
@@ -148,7 +142,7 @@ workflows:
       - deploy:
             context: GCP_CONFIGURATION
             requires:
-              - SCM
+              - publish-image
             filters:
               branches:
                 only: master
