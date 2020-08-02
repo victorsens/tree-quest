@@ -143,6 +143,6 @@ workflows:
             context: GCP_CONFIGURATION
             requires:
               - publish-image
-#            filters:
-#              branches:
-#                only: master
+            filters:
+              branches:
+                only: master
