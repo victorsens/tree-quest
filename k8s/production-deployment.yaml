@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: tree-quest
-        image: registry.hub.docker.com\/victorsens\/tree-quest
+        image: registry.hub.docker.com/victorsens/tree-quest
         resources:
           limits:
             memory: "2048Mi"
