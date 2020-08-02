@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.swisscom</groupId>
   <artifactId>tree-quest</artifactId>
-  <version>0.0.23-SNAPSHOT</version>
+  <version>0.0.23</version>
   <name>tree-quest</name>
   <description>Demo project for Spring Boot</description>
 
@@ -106,6 +106,6 @@
     <connection>scm:git:https://github.com/victorsens/tree-quest.git</connection>
     <developerConnection>scm:git:https://github.com/victorsens/tree-quest.git</developerConnection>
     <url>https://github.com/victorsens/tree-quest</url>
-    <tag>tree-quest-0.0.1</tag>
+    <tag>tree-quest-0.0.23</tag>
   </scm>
 </project>
