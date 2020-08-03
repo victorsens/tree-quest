@@ -98,7 +98,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      #Creating the Google cloud credentials JSON file.
       - run:
           name: Deploy images to the cluster.
           command: |
