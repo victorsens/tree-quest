@@ -101,7 +101,6 @@ jobs:
       - run:
           name: Deploy images to the cluster.
           command: |
-            /gcp/authenticate_serive_account.sh
             cd ./k8s/
             kustomize edit set image ${PROJECT_IMAGE}$CIRCLE_WORKFLOW_ID
             cat kustomization.yml
