@@ -99,8 +99,6 @@ jobs:
     steps:
       - checkout
       #Creating the Google cloud credentials JSON file.
-      - run: echo ${GCLOUD_SERVICE_KEY} > /gcp/gcp_key.json
-      - run: /gcp/authenticate_serive_account.sh # script to authenticate in GCP and Cluster
       - run:
           name: Deploy images to the cluster.
           command: |
