@@ -13,7 +13,6 @@ jobs:
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
-
     working_directory: ~/repo
 
     environment:
@@ -111,7 +110,7 @@ jobs:
             kubectl rollout status deployment/tree-quest-backend
           environment:
              PROJECT_IMAGE: registry.hub.docker.com/victorsens/tree-quest:circle_ci_build_
-             CLUSTER_NAMESPACE: swisscom
+             CLUSTER_NAMESPACE: default
 workflows:
   version: 2
   build-deploy:
