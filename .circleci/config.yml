@@ -106,7 +106,8 @@ jobs:
             cat kustomization.yml
             kustomize build > ./kustomized-deployment.yaml
             cat ./kustomized-deployment.yaml
-            kubectl apply -f ./kustomized-deployment.yaml
+            istioctl kube-inject -f ./kustomized-deployment.yaml > istio-deployment.yaml   # convert kubernates deployment to istio;
+            kubectl apply -f ./istio-deployment.yaml
             kubectl rollout status deployment/tree-quest-backend
           environment:
              PROJECT_IMAGE: registry.hub.docker.com/victorsens/tree-quest:circle_ci_build_
