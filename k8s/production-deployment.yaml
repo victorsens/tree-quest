@@ -12,6 +12,7 @@ spec:
       labels:
         app: tree-quest-backend
     spec:
+      serviceAccount: tree-quest-service-account
       containers:
       - name: tree-quest
         image: registry.hub.docker.com/victorsens/tree-quest

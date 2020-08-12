@@ -4,10 +4,17 @@ metadata:
   name: tree-quest-service
   labels:
     app: tree-quest-service
+    service: tree-quest-service
 spec:
-  type: NodePort
+  ports:
+    - port: 8080
+      name: http
   selector:
     app: tree-quest-backend
-  ports:
-    - port: 80
-      targetPort: 8080
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tree-quest-service-account
+  labels:
+    account: tree-quest-backend

@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  GCP_CONTAINER:
+    image: victorsens/gcp_setup:latest
+    container_name: gcp_tools
+    ports:
+      - "8080:8080"
+    environment:
+      - GOOGLE_CLUSTER_ID=pro
+      - GOOGLE_COMPUTE_ZONE=europe-west4-b
+      - GOOGLE_PROJECT_ID=assignment-web
+      - CLUSTER_NAMESPACE=default
+      - PROJECT_IMAGE=registry.hub.docker.com/victorsens/tree-quest:circle_ci_build_
+      - CIRCLE_WORKFLOW_ID=00923285-3c44-4955-8de1-ed578e23c5cf
+    command:
+      sleep infinity
+    volumes:
+    - /Users/vteixeira/environment/git/tree-guest:/tree_guest #Map the local source code to container source
