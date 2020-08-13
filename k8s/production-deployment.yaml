@@ -21,11 +21,11 @@ spec:
       containers:
       - name: tree-guest
         image: registry.hub.docker.com/victorsens/tree-quest
-        resources:
-          limits:
-            memory: "2048Mi"
-            cpu: "100m"
-        imagePullPolicy: Always
+#        resources:
+#          limits:
+#            memory: "2048Mi"
+#            cpu: "100m"
+        imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
 #        readinessProbe:
