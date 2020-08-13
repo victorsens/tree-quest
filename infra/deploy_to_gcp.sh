@@ -5,4 +5,4 @@ kustomize build > ./kustomized-deployment.yaml
 cat ./kustomized-deployment.yaml
 istioctl kube-inject -f ./kustomized-deployment.yaml > istio-deployment.yaml   # convert kubernates deployment to istio;
 kubectl apply -f ./istio-deployment.yaml
-kubectl rollout status deployment/tree-quest-backend
+kubectl rollout status deployment/tree-guest-v1

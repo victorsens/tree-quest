@@ -1,20 +1,20 @@
 apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tree-guest-service-account
+  labels:
+    account: tree-guest
+---
+apiVersion: v1
 kind: Service
 metadata:
-  name: tree-quest-service
+  name: tree-guest
   labels:
-    app: tree-quest-service
-    service: tree-quest-service
+    app: tree-guest
+    service: tree-guest
 spec:
   ports:
     - port: 8080
       name: http
   selector:
-    app: tree-quest-backend
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tree-quest-service-account
-  labels:
-    account: tree-quest-backend
+    app: tree-guest
