@@ -1,3 +1,4 @@
 resources:
   - production-deployment.yaml
   - production-services.yaml
+  - gateway.yaml
