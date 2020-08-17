@@ -30,6 +30,7 @@ I also decide to use JAVA 11 in this project. So it is necessary install it to r
 To test the application using the **Swagger** open the following url in your web browser: 
 ```
 http://localhost:8080/swagger-ui.html
+
 ```
 
 Using the Swagger user interface it will be possible to test the full application, *Upload the initial tree*, *upload the new tree* and *merge the trees*
