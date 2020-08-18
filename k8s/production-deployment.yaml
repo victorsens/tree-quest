@@ -1,5 +1,30 @@
-kind: Deployment
+
+##################################################################################################
+# Tree Guest services
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: tree-guest
+  labels:
+    app: tree-guest
+    service: tree-guest
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: tree-guest
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tree-guest-service-account
+  labels:
+    account: tree-guest
+---
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: tree-guest-v1
   labels:
@@ -8,29 +33,19 @@ metadata:
 spec:
   replicas: 1
   selector:
-      matchLabels:
-        app: tree-guest
-        version: v1
+    matchLabels:
+      app: tree-guest
+      version: v1
   template:
     metadata:
       labels:
         app: tree-guest
         version: v1
     spec:
-      serviceAccount: tree-guest-service-account
+      serviceAccountName: tree-guest-service-account
       containers:
       - name: tree-guest
         image: registry.hub.docker.com/victorsens/tree-quest
-#        resources:
-#          limits:
-#            memory: "2048Mi"
-#            cpu: "100m"
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
-#        readinessProbe:
-#            httpGet:
-#                path: /actuator/health
-#                port: 8080
-#            initialDelaySeconds: 5
-#            periodSeconds: 5

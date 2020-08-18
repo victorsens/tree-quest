@@ -19,13 +19,13 @@ metadata:
   name: tree-guest-virtual-service
 spec:
   hosts:
-    - "*"
+  - "*"
   gateways:
-    - tree-guest-gateway
+  - tree-guest-gateway
   http:
   - match:
     - uri:
-        prefix: /v1
+        prefix: /
     route:
     - destination:
         host: tree-guest
