@@ -1,19 +1,4 @@
 apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: tree-guest-gateway
-spec:
-  selector:
-    istio: ingressgateway # use istio default controller
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - "swisscom.victorsens.com"
----
-apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: tree-guest-virtual-service
@@ -21,7 +6,7 @@ spec:
   hosts:
   - "swisscom.victorsens.com"
   gateways:
-  - tree-guest-gateway
+  - istio-gateway
   http:
   - match:
     - uri:
