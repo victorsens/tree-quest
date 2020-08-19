@@ -11,7 +11,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "*"
+    - "swisscom.victorsens.com"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -19,7 +19,7 @@ metadata:
   name: tree-guest-virtual-service
 spec:
   hosts:
-  - "*"
+  - "swisscom.victorsens.com"
   gateways:
   - tree-guest-gateway
   http:
