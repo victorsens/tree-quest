@@ -4,8 +4,6 @@ services:
   GCP_CONTAINER:
     image: victorsens/gcp_setup:latest
     container_name: gcp_tree
-    ports:
-      - "8080:8080"
     environment:
       - GOOGLE_CLUSTER_ID=pro
       - GOOGLE_COMPUTE_ZONE=europe-west4-b
